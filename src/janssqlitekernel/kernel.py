@@ -2,7 +2,7 @@
 from ipykernel.kernelbase import Kernel
 from pexpect import replwrap
 
-sqlitewrapper = replwrap.REPLWrapper("sqlite3", "sqlite> ", None)
+sqlitewrapper = replwrap.REPLWrapper("sqlite3 -box", "sqlite> ", None)
 
 class janssqlitekernel(Kernel):
     implementation = 'IPython'
