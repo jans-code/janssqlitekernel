@@ -3,12 +3,12 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "jansmongodbkernel"
-version = "0.0.2"
+name = "janssqlitekernel"
+version = "0.0.1"
 authors = [
   { name="Jan Arman Parpin", email="is@hidden.com" },
 ]
-description = "A jupyter mongodb kernel."
+description = "A jupyter SQLite3 kernel."
 readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [
@@ -18,5 +18,5 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/jans-code/jansmongodbkernel"
-"Bug Tracker" = "https://github.com/jans-code/jansmongodbkernel/issues"
+"Homepage" = "https://github.com/jans-code/janssqlitekernel"
+"Bug Tracker" = "https://github.com/jans-code/janssqlitekernel/issues"
