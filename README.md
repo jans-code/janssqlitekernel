@@ -5,7 +5,7 @@
 A simple SQLite3 kernel for jupyter.
 Created using IPython's kernel and pexpect's REPLWrapper subclasses.
 
-## Installation
+## Dev Installation
 
 - install SQLite3 from your distro's package manager
 - `pip install` jupyterlab and pexpect
