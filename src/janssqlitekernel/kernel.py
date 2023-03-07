@@ -21,7 +21,7 @@ class janssqlitekernel(Kernel):
                    allow_stdin=False):
         if not silent:            
             if (code[0:5] == ".quit"):
-                solution = f'"{code}" is now allowed in the SQLite kernel'
+                solution = f'"{code}" is not allowed in the SQLite kernel'
             else:
                 code = code.replace("\n"," ")
                 solution = sqlitewrapper.run_command(code)
