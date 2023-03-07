@@ -36,14 +36,18 @@ class janssqlitekernel(Kernel):
                    allow_stdin=False):
         if not silent:
             code = code.strip()
+            code = code.replace("\n"," ")
             check_code = code.split(" ")
             if check_code[0] not in special_commands:
                 if code[-1] != ";":
                     code = code + ";"
-            if check_code[0] in exit_commands:
+            if code == "":
+                solution = ""
+            elif code[0] == "#":
+                solution = ""
+            elif check_code[0] in exit_commands:
                 solution = check_code[0] + " command is not allowed in SQLite3 Kernel."
             else:
-                code = code.replace("\n"," ")
                 solution = sqlitewrapper.run_command(code)
                 if solution.strip() == "":
                     solution = "Query OK"
@@ -51,7 +55,6 @@ class janssqlitekernel(Kernel):
             self.send_response(self.iopub_socket, 'stream', stream_content)
 
         return {'status': 'ok',
-                # The base class increments the execution count
                 'execution_count': self.execution_count,
                 'payload': [],
                 'user_expressions': {},
