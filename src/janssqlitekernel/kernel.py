@@ -2,6 +2,21 @@
 from ipykernel.kernelbase import Kernel
 from pexpect import replwrap
 
+special_commands = [".archive",".auth",".backup",".bail",".binary",
+                    ".cd",".changes",".check",".clone",".connection",".databases",
+                    ".dbconfig",".dbinfo",".dump",".echo",".eqp",".excel",
+                    ".expert",".explain",".filectrl",".fullschema",".headers",
+                    ".help",".import",".imposter",".indexes",".limit",".lint",
+                    ".load",".log",".mode",".nonce",".nullvalue",".once",".open",
+                    ".output",".parameter",".print",".progress",".prompt",
+                    ".read",".recover",".restore",".save",".scanstats",
+                    ".schema",".selftest",".separator",".sha3sum",".shell",
+                    ".show",".stats",".system",".tables",".testcase",".testctrl",
+                    ".timeout",".timer",".trace",".version",".vfsinfo",".vfslist",
+                    ".vfsname",".width"]
+
+exit_commands = [".exit", ".quit"]
+
 sqlitewrapper = replwrap.REPLWrapper("sqlite3 -box", "sqlite> ", None)
 
 class janssqlitekernel(Kernel):
@@ -19,9 +34,14 @@ class janssqlitekernel(Kernel):
 
     def do_execute(self, code, silent, store_history=True, user_expressions=None,
                    allow_stdin=False):
-        if not silent:            
-            if (code[0:5] == ".quit"):
-                solution = f'"{code}" is not allowed in the SQLite kernel'
+        if not silent:
+            code = code.strip()
+            check_code = code.split(" ")
+            if check_code[0] not in special_commands:
+                if code[-1] != ";":
+                    code = code + ";"
+            if check_code[0] in exit_commands:
+                solution = check_code[0] + " command is not allowed in SQLite3 Kernel."
             else:
                 code = code.replace("\n"," ")
                 solution = sqlitewrapper.run_command(code)
