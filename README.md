@@ -1,6 +1,6 @@
 # janssqlitekernel
 
-![alt](janssqlitekernel/logo-svg.svg)
+![Logo](https://raw.githubusercontent.com/jans-code/janssqlitekernel/main/janssqlitekernel/logo-svg.svg)
 
 A simple SQLite3 kernel for jupyter.
 Created using IPython's kernel and pexpect's REPLWrapper subclasses.
@@ -8,10 +8,16 @@ You cannot span commands over multiple inputs.
 If you forget a semicolon at the end, the kernel will append it for you.
 This feature is disabled for the SQLite dot-commands.
 
-## Dev Installation
+## Installation
 
 - install SQLite3 from your distro's package manager
-- `pip install` jupyterlab and pexpect
+- get the kernel module via pip
+- `pip install janssqlitekernel`
+- then install kernelspec
+- `janssqlitekernel`
+
+## Dev Installation
+
 - download/clone this project
 - open shell in project folder
 - `pip install -e ./`
