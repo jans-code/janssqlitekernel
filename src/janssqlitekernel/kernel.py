@@ -2,20 +2,11 @@
 from ipykernel.kernelbase import Kernel
 from pexpect import replwrap
 
-special_commands = [".archive",".auth",".backup",".bail",".binary",
-                    ".cd",".changes",".check",".clone",".connection",".databases",
-                    ".dbconfig",".dbinfo",".dump",".echo",".eqp",".excel",
-                    ".expert",".explain",".filectrl",".fullschema",".headers",
-                    ".help",".import",".imposter",".indexes",".limit",".lint",
-                    ".load",".log",".mode",".nonce",".nullvalue",".once",".open",
-                    ".output",".parameter",".print",".progress",".prompt",
-                    ".read",".recover",".restore",".save",".scanstats",
-                    ".schema",".selftest",".separator",".sha3sum",".shell",
-                    ".show",".stats",".system",".tables",".testcase",".testctrl",
-                    ".timeout",".timer",".trace",".version",".vfsinfo",".vfslist",
-                    ".vfsname",".width"]
+commands = ['.ARCHIVE', '.AUTH', '.BACKUP', '.BAIL', '.BINARY', '.CD', '.CHANGES', '.CHECK', '.CLONE', '.CONNECTION', '.DATABASES', '.DBCONFIG', '.DBINFO', '.DUMP', '.ECHO', '.EQP', '.EXCEL', '.EXPERT', '.EXPLAIN', '.FILECTRL', '.FULLSCHEMA', '.HEADERS', '.HELP', '.IMPORT', '.IMPOSTER', '.INDEXES', '.LIMIT', '.LINT', '.LOAD', '.LOG', '.MODE', '.NONCE', '.NULLVALUE', '.ONCE', '.OPEN', '.OUTPUT', '.PARAMETER', '.PRINT', '.PROGRESS', '.PROMPT', '.READ', '.RECOVER', '.RESTORE', '.SAVE', '.SCANSTATS', '.SCHEMA', '.SELFTEST', '.SEPARATOR', '.SESSION', '.SHA3SUM', '.SHELL', '.SHOW', '.STATS', '.SYSTEM', '.TABLES', '.TESTCASE', '.TESTCTRL', '.TIMEOUT', '.TIMER', '.TRACE', '.VFSINFO', '.VFSLIST', '.VFSNAME', '.WIDTH', 'ABORT', 'ACTION', 'ADD', 'AFTER', 'ALL', 'ALTER', 'ALWAYS', 'ANALYZE', 'AND', 'AS', 'ASC', 'ATTACH', 'AUTOINCREMENT', 'BEFORE', 'BEGIN', 'BETWEEN', 'BY', 'CASCADE', 'CASE', 'CAST', 'CHECK', 'COLLATE', 'COLUMN', 'COMMIT', 'CONFLICT', 'CONSTRAINT', 'CREATE', 'CROSS', 'CURRENT', 'CURRENT_DATE', 'CURRENT_TIME', 'CURRENT_TIMESTAMP', 'DATABASE', 'DEFAULT', 'DEFERRABLE', 'DEFERRED', 'DELETE', 'DESC', 'DETACH', 'DISTINCT', 'DO', 'DROP', 'EACH', 'ELSE', 'END', 'ESCAPE', 'EXCEPT', 'EXCLUDE', 'EXCLUSIVE', 'EXISTS', 'EXPLAIN', 'FAIL', 'FILTER', 'FIRST', 'FOLLOWING', 'FOR', 'FOREIGN', 'FROM', 'FULL', 'GENERATED', 'GLOB', 'GROUP', 'GROUPS', 'HAVING', 'IF', 'IGNORE', 'IMMEDIATE', 'IN', 'INDEX', 'INDEXED', 'INITIALLY', 'INNER', 'INSERT', 'INSTEAD', 'INTERSECT', 'INTO', 'IS', 'ISNULL', 'JOIN', 'KEY', 'LAST', 'LEFT', 'LIKE', 'LIMIT', 'MATCH', 'MATERIALIZED', 'NATURAL', 'NO', 'NOT', 'NOTHING', 'NOTNULL', 'NULL', 'NULLS', 'OF', 'OFFSET', 'ON', 'OR', 'ORDER', 'OTHERS', 'OUTER', 'OVER', 'PARTITION', 'PLAN', 'PRAGMA', 'PRECEDING', 'PRIMARY', 'QUERY', 'RAISE', 'RANGE', 'RECURSIVE', 'REFERENCES', 'REGEXP', 'REINDEX', 'RELEASE', 'RENAME', 'REPLACE', 'RESTRICT', 'RETURNING', 'RIGHT', 'ROLLBACK', 'ROW', 'ROWS', 'SAVEPOINT', 'SELECT', 'SET', 'TABLE', 'TEMP', 'TEMPORARY', 'THEN', 'TIES', 'TO', 'TRANSACTION', 'TRIGGER', 'UNBOUNDED', 'UNION', 'UNIQUE', 'UPDATE', 'USING', 'VACUUM', 'VALUES', 'VIEW', 'VIRTUAL', 'WHEN', 'WHERE', 'WINDOW', 'WITH', 'WITHOUT'] 
 
-exit_commands = [".exit", ".quit"]
+special_commands = ['.ARCHIVE', '.AUTH', '.BACKUP', '.BAIL', '.BINARY', '.CD', '.CHANGES', '.CHECK', '.CLONE', '.CONNECTION', '.DATABASES', '.DBCONFIG', '.DBINFO', '.DUMP', '.ECHO', '.EQP', '.EXCEL', '.EXPERT', '.EXPLAIN', '.FILECTRL', '.FULLSCHEMA', '.HEADERS', '.HELP', '.IMPORT', '.IMPOSTER', '.INDEXES', '.LIMIT', '.LINT', '.LOAD', '.LOG', '.MODE', '.NONCE', '.NULLVALUE', '.ONCE', '.OPEN', '.OUTPUT', '.PARAMETER', '.PRINT', '.PROGRESS', '.PROMPT', '.READ', '.RECOVER', '.RESTORE', '.SAVE', '.SCANSTATS', '.SCHEMA', '.SELFTEST', '.SEPARATOR', '.SESSION', '.SHA3SUM', '.SHELL', '.SHOW', '.STATS', '.SYSTEM', '.TABLES', '.TESTCASE', '.TESTCTRL', '.TIMEOUT', '.TIMER', '.TRACE', '.VFSINFO', '.VFSLIST', '.VFSNAME', '.WIDTH']
+
+exit_commands = [".EXIT", ".QUIT"]
 
 sqlitewrapper = replwrap.REPLWrapper("sqlite3 -box", "sqlite> ", None)
 
@@ -38,14 +29,14 @@ class janssqlitekernel(Kernel):
             code = code.strip()
             code = code.replace("\n"," ")
             check_code = code.split(" ")
-            if check_code[0] not in special_commands:
+            if check_code[0].upper() not in special_commands:
                 if code[-1] != ";":
                     code = code + ";"
             if code == "":
                 solution = ""
             elif code[0] == "#":
                 solution = ""
-            elif check_code[0] in exit_commands:
+            elif check_code[0].upper() in exit_commands:
                 solution = check_code[0] + " command is not allowed in SQLite3 Kernel."
             else:
                 solution = sqlitewrapper.run_command(code)
@@ -59,3 +50,25 @@ class janssqlitekernel(Kernel):
                 'payload': [],
                 'user_expressions': {},
                }
+    
+    def do_complete(self, code, cursor_pos):
+        
+        if " " in code:
+            for i in range(len(code)):
+                if code[i] == " ":
+                    cursor_pos = i + 1
+        else:
+            cursor_pos = 0
+        
+        options = []
+        for command in commands:
+            if command.startswith(code.split(" ")[-1].upper()):
+                options.append(command)
+
+        return {
+            'matches': options,
+            'metadata': {},
+            'status': 'ok',
+            'cursor_start': cursor_pos,
+            'cursor_end': len(code)
+        }
