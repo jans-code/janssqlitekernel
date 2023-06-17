@@ -17,8 +17,8 @@ class janssqlitekernel(Kernel):
     language = 'sqlite3'
     language_version = '3.40.1'
     language_info = {
-        'name': 'sqlite3',
-        'mimetype': 'application/sql',
+        'name': 'SQL',
+        'mimetype': 'text/plain',
         'file_extension': '.sql',
     }
     banner = "SQLite 3\nConnected to a transient in-memory database.\n"\
@@ -60,9 +60,7 @@ class janssqlitekernel(Kernel):
     def do_complete(self, code, cursor_pos):
         
         if " " in code:
-            for i in range(len(code)):
-                if code[i] == " ":
-                    cursor_pos = i + 1
+            cursor_pos = code.rfind(" ") + 1
         else:
             cursor_pos = 0
         
